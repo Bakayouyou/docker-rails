@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:15
+    container_name: rails-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5438:5432"
+
+  api:
+    build: .
+    container_name: rails-api
+    volumes:
+      - ./myapp:/app
+    ports:
+      - "3007:3000"
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/rails_api_development
+      RAILS_ENV: development
+    depends_on:
+      - db
+
+volumes:
+  db_data:
